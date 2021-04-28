@@ -28,6 +28,7 @@ services:
       MINIO_NOTIFY_KAFKA_BROKERS_docker: kafka:9092
       MINIO_NOTIFY_KAFKA_ENABLE_docker: 'on'
       MINIO_NOTIFY_KAFKA_TOPIC_docker: minio
+    entrypoint: /usr/bin/docker-entrypoint.sh server /data
     ports:
       - "9000:9000"
     depends_on:
