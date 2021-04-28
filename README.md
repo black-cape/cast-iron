@@ -1,29 +1,24 @@
 # Cast Iron
 
-The platform-agnostic data storage and ETL system leveraging MinIO and other tools to enable mission endstates.
+The platform-agnostic data storage and ETL system leveraging MinIO and other tools to enable mission end states.
 
-## Basics
-
-This project provides an example environment using [MinIO] to create a basic, cloud-agnostic ETL system.
+This repository contains the docker-compose recipe for staring up the backbone of Cast-Iron as well as the Cast-Iron Worker. 
 
 Main Parts of the system include:
 * Object Storage ([AWS S3], [MinIO], etc.)
 * Message Queue ([Kafka], [Nats], etc.)
 * Worker ([Celery], [Faust], etc.)
 * ETL (Bash Scripts, Python)
-* Database ([MS SQL], [MySQL], [PostgreSQL], [SQLite], etc.)
 
-## Architecture
-
-![architecture](diagrams/cast-iron-architecture-diagram.png)
 
 ## Getting Started
 
 * Install [Docker]
-* Run the docker compose
-```bash
-$ docker-compose up
-```
+* Create a startup script within your existing project that you would like to use Cast-Iron with. 
+  See `cast-iron-recipe-postgres` for an example of this.   
+* Clone this repository as a submodule within your existing repository with 
+  `git submodule add git@github.com:black-cape/cast-iron-docker-compose.git`
+  
 
 Once started, the following areas are accessible:
 * MinIO at localhost:9000
