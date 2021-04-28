@@ -44,8 +44,6 @@ services:
   # Workers
   worker:
     image: ghcr.io/black-cape/cast-iron/worker:latest
-    build:
-      context: worker
     environment:
       KAFKA_BROKER: kafka:9092
       MINIO_HOST: minio:9000
