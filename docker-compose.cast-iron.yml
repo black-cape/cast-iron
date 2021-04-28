@@ -19,18 +19,6 @@ services:
     depends_on:
       - zookeeper
 
-  # ETL Data Storage
-  postgres:
-    image: postgres:12-alpine
-    volumes:
-      - "./databases/postgres/data:/var/lib/postgresql/data"
-      - "./databases/postgres/init/1_create_table.sql:/docker-entrypoint-initdb.d/1_create_table.sql"
-    ports:
-      - "5432:5432"
-    environment:
-      POSTGRES_PASSWORD: castiron # Not Secure
-      POSTGRES_USER: castiron
-
   # Object Storage
   minio:
     image: minio/minio
@@ -57,19 +45,13 @@ services:
 
   # Workers
   worker:
-    image: cast-iron/worker:latest
+    image: ghcr.io/black-cape/cast-iron/worker:latest
     build:
       context: worker
     environment:
-      DATABASE_HOST: postgres
-      DATABASE_PASSWORD: castiron # Not Secure
-      DATABASE_PORT: 5432
-      DATABASE_TABLE: castiron
-      DATABASE_USER: castiron
       KAFKA_BROKER: kafka:9092
       MINIO_HOST: minio:9000
     depends_on:
-      - postgres
       - kafka
       - minio
     restart: always
