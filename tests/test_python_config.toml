@@ -1,0 +1,34 @@
+# An optional title describing this document
+title = "Example ETL processor configuration that runs some Python code"
+
+[castiron.etl]
+# Whether this processor should be activated
+enabled = true
+
+# A unix-like filename glob pattern indicating which filenames this handler will process
+handled_file_glob = "*_test.tsv"
+
+# Directory relative to this file to accept new files to process. Will be created if absent
+inbox_dir = "01_inbox"
+
+# Directory relative to this file to store files under process. Will be created if absent
+processing_dir = "02_processing"
+
+# Directory relative to this file to store previously processed files. Will be created if absent
+archive_dir = "03_archive"
+
+# Directory relative to this file to store files which failed processing. Will be created if needed
+error_dir = "04_failed"
+
+# Whether to store failed processing error output
+save_error_log = true
+
+# Loads the method `process_file_stub` from the `etl.util` module
+# and will pass in the data file as the first positional argument
+# and the named arguments {example_kwarg_1: "just a kwarg", example_kwarg_2: 2}
+[castiron.etl.python]
+worker_run_method = "etl.util.process_file_stub"
+
+[castiron.etl.python.static_kwargs]
+example_kwarg_1 = "just a kwarg"
+example_kwarg_2 = 2

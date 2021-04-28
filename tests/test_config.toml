@@ -1,0 +1,39 @@
+# An optional title describing this document
+title = "Example ETL processor configuration that runs an inline shell script"
+
+[castiron.etl]
+# Whether this processor should be activated
+enabled = true
+
+# A unix-like filename glob pattern indicating which filenames this handler will process
+handled_file_glob = "*_test.tsv"
+
+# Directory relative to this file to accept new files to process. Will be created if absent
+inbox_dir = "01_inbox"
+
+# Directory relative to this file to store files under process. Will be created if absent
+processing_dir = "02_processing"
+
+# Directory relative to this file to store previously processed files. Will be created if absent
+archive_dir = "03_archive"
+
+# Directory relative to this file to store files which failed processing. Will be created if needed
+error_dir = "04_failed"
+
+# Whether to store failed processing error output
+save_error_log = false
+
+# A script to execute in the OS shell. Exit code will indicate success
+# Can access the following environment variables
+#| Name                     | Description
+#| ------------------------ | ---------------------------
+#| DATABASE_HOST            | Hostname or IP for database
+#| DATABASE_PASSWORD        | Password for user account into database
+#| DATABASE_PORT            | Port for database
+#| DATABASE_TABLE           | Table for database
+#| DATABASE_USER            | User for database
+#| ETL_FILENAME             | Local path to the currently handled data file
+# Remember to escape backslash (\) to be \\
+shell = """
+shell
+"""
