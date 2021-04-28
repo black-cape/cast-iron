@@ -1,0 +1,75 @@
+version: '3.8'
+
+services:
+  zookeeper:
+    image: wurstmeister/zookeeper
+    restart: always
+    ports:
+      - "2181:2181"
+
+  # Message Queues
+  kafka:
+    image: wurstmeister/kafka
+    ports:
+      - "9092:9092"
+    environment:
+      KAFKA_ADVERTISED_HOST_NAME: kafka
+      KAFKA_CREATE_TOPICS: "postgres:1:1,minio:1:1,pizza-tracker:1:1"
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+    depends_on:
+      - zookeeper
+
+  # ETL Data Storage
+  postgres:
+    image: postgres:12-alpine
+    volumes:
+      - "./databases/postgres/data:/var/lib/postgresql/data"
+      - "./databases/postgres/init/1_create_table.sql:/docker-entrypoint-initdb.d/1_create_table.sql"
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_PASSWORD: castiron # Not Secure
+      POSTGRES_USER: castiron
+
+  # Object Storage
+  minio:
+    image: minio/minio
+    environment:
+      MINIO_ACCESS_KEY: castiron
+      MINIO_SECRET_KEY: castiron
+      MINIO_NOTIFY_KAFKA_BROKERS_docker: kafka:9092
+      MINIO_NOTIFY_KAFKA_ENABLE_docker: 'on'
+      MINIO_NOTIFY_KAFKA_TOPIC_docker: minio
+    volumes: 
+      - ./scripts/wait-for.sh:/usr/bin/wait-for.sh:ro
+    entrypoint: /usr/bin/wait-for.sh kafka:9092 -- /usr/bin/docker-entrypoint.sh server /data
+    ports:
+      - "9000:9000"
+    depends_on:
+      - kafka
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9000/minio/health/live"]
+      interval: 30s
+      timeout: 20s
+      start_period: 120s
+      retries: 3
+    restart: always
+
+  # Workers
+  worker:
+    image: cast-iron/worker:latest
+    build:
+      context: worker
+    environment:
+      DATABASE_HOST: postgres
+      DATABASE_PASSWORD: castiron # Not Secure
+      DATABASE_PORT: 5432
+      DATABASE_TABLE: castiron
+      DATABASE_USER: castiron
+      KAFKA_BROKER: kafka:9092
+      MINIO_HOST: minio:9000
+    depends_on:
+      - postgres
+      - kafka
+      - minio
+    restart: always
