@@ -9,6 +9,7 @@ WORKDIR /opt/setup
 
 RUN apt-get update && \
   apt-get -y install gcc g++ && \
+  python -m pip install --upgrade pip && \
   pip install --upgrade poetry
 COPY . /opt/setup
 RUN poetry install --no-dev --no-interaction --no-ansi
