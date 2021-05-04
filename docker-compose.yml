@@ -58,7 +58,7 @@ services:
   worker:
     build:
       context: .
-      dockerfile: cast-iron-docker-compose/Dockerfile
+      dockerfile: cast-iron/Dockerfile
     image: ghcr.io/black-cape/cast-iron/worker:latest
     environment:
       KAFKA_BROKER: kafka:9092
