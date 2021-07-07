@@ -52,6 +52,9 @@ With the docker containers running and the worker running in either a container 
 1. TSV moves to the `archive_dir` bucket
 1. Data inserted into Postgres
 
+### File glob pattern matching
+For `handled_file_glob` pattern matching, the matchers should be provided as `_test.tsv|_updated.csv|.mp3` (no spaces).
+
 ## Technology
 
 ### Toml

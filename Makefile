@@ -15,7 +15,7 @@ help: ## This info
 	@echo
 
 
-build:
+build: ## build the docker image
 	docker build -t cast-iron/worker .
 
 nag: sort lint type test ## Run all checks
